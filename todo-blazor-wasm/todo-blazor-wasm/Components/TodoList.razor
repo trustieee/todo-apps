@@ -1,9 +1,11 @@
-﻿@using todo_blazor_wasm.Models
+﻿@inject IJSRuntime JSRuntime
+
+@using todo_blazor_wasm.Models
 
 <div class="list">
     <h3 class="list-header">Todo List</h3>
     <div class="list-inputs">
-        <input class="list-inputs-input" @bind="_newTodo" />
+        <input class="list-inputs-input" @bind="_newTodo" @ref="_newTodoElement" />
         <button class="list-inputs-button" @onclick="@AddTodoItem">+</button>
     </div>
     <div>
@@ -11,7 +13,7 @@
         {
             foreach (var todoItem in _todoItems)
             {
-                <TodoItem @key="todoItem" Id="@todoItem.Id" Title="@todoItem.Title" Remove="@RemoveTodoItem" />
+                <TodoItem @key="todoItem" Item="@todoItem" Remove="@RemoveTodoItem" />
             }
         }
         else
@@ -25,15 +27,17 @@
 </div>
 
 @code {
+    private ElementReference _newTodoElement;
     private IList<TodoItemModel> _todoItems = new List<TodoItemModel>();
     private string _newTodo;
 
-    private void AddTodoItem()
+    private async Task AddTodoItem()
     {
         if (!string.IsNullOrWhiteSpace(_newTodo))
         {
             _todoItems.Add(new TodoItemModel { Title = _newTodo });
             _newTodo = string.Empty;
+            await JSRuntime.InvokeVoidAsync("todoListJsInterop.focus", _newTodoElement);
         }
     }
 

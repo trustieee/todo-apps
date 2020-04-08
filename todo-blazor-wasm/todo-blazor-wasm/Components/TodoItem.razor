@@ -1,20 +1,19 @@
-﻿<div class="todoitem">
-    <span class="todoitem-title">@Title</span>
+﻿@using todo_blazor_wasm.Models
+
+<div class="todoitem">
+    <span class="todoitem-title">@Item.Title</span>
     <button class="todoitem-remove" @onclick="@InvokeRemove">x</button>
 </div>
 
 @code {
     [Parameter]
-    public string Title { get; set; }
-
-    [Parameter]
-    public Guid Id { get; set; }
+    public TodoItemModel Item { get; set; }
 
     [Parameter]
     public Action<Guid> Remove { get; set; }
 
     private void InvokeRemove()
     {
-        Remove?.Invoke(Id);
+        Remove?.Invoke(Item.Id);
     }
 }
