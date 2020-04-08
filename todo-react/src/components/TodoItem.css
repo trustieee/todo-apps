@@ -1,0 +1,12 @@
+.todoitem {
+    display: flex;
+    margin: 5px auto;
+}
+
+.todoitem:hover {
+    background-color:#EEE;
+}
+
+.todoitem-title {
+    width: 100%;
+}

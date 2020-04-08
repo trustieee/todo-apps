@@ -1,0 +1,53 @@
+﻿@using todo_blazor_wasm.Models
+
+<div class="list">
+    <h3 class="list-header">Todo List</h3>
+    <div class="list-inputs">
+        <input class="list-inputs-input" @bind="_newTodo" />
+        <button class="list-inputs-button" @onclick="@AddTodoItem">+</button>
+    </div>
+    <div>
+        @if (_todoItems != null && _todoItems.Count > 0)
+        {
+            foreach (var todoItem in _todoItems)
+            {
+                <TodoItem @key="todoItem" Id="@todoItem.Id" Title="@todoItem.Title" Remove="@RemoveTodoItem" />
+            }
+        }
+        else
+        {
+            <div class="list-todoitems-placeholder-container">
+                <div>Add items to see them here!</div>
+            </div>
+        }
+
+    </div>
+</div>
+
+@code {
+    private IList<TodoItemModel> _todoItems = new List<TodoItemModel>();
+    private string _newTodo;
+
+    private void AddTodoItem()
+    {
+        if (!string.IsNullOrWhiteSpace(_newTodo))
+        {
+            _todoItems.Add(new TodoItemModel { Title = _newTodo });
+            _newTodo = string.Empty;
+        }
+    }
+
+    private void RemoveTodoItem(Guid id)
+    {
+        for (var i = 0; i < _todoItems.Count; i++)
+        {
+            if (_todoItems[i].Id == id)
+            {
+                _todoItems.RemoveAt(i);
+                StateHasChanged();
+                break;
+            }
+        }
+
+    }
+}
