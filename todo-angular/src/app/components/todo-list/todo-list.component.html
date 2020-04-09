@@ -1,0 +1,19 @@
+<div class="list">
+    <h3 class="list-header">Todo List</h3>
+    <div class="list-inputs">
+        <input class="list-inputs-input" type="text" [(ngModel)]="newTodo" #newTodoInput />
+        <button class="list-inputs-button" (click)="addTodoItem()">+</button>
+    </div>
+    <div class="list-todoitems">
+        <div *ngIf="todoItems && todoItems.length > 0; else noItems">
+            <div *ngFor="let todoItem of todoItems">
+                <todo-item [item]="todoItem" (removed)="onRemoved($event)"></todo-item>
+            </div>
+        </div>
+        <ng-template #noItems>
+            <div class="list-todoitems-placeholder-container">
+                <div>Add items to see them here!</div>
+            </div>
+        </ng-template>
+    </div>
+</div>
