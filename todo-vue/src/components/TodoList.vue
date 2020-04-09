@@ -5,7 +5,7 @@
       <input class="list-inputs-input" v-model="newTodo" ref="todoInput" />
       <button class="list-inputs-button" v-on:click="addTodoItem">+</button>
     </div>
-    <div class="list-todoitems">
+    <div v-if="todoItems && todoItems.length > 0" class="list-todoitems">
       <TodoItem
         v-for="todoItem in todoItems"
         v-bind:key="todoItem.id"
@@ -13,6 +13,9 @@
         v-bind:id="todoItem.id"
         v-on:removeClicked="removeClicked"
       />
+    </div>
+    <div v-else class="list-todoitems-placeholder-container">
+      <div>Add items to see them here!</div>
     </div>
   </div>
 </template>
