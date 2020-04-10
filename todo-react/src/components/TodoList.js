@@ -1,10 +1,11 @@
-import React, { useState, useRef } from 'react'
-import TodoItem from './TodoItem'
-import './TodoList.css'
+import React, { useState, useRef } from 'react';
+import TodoItem from './TodoItem';
+import './TodoList.css';
+import useStickyState from '../hooks/useStickyState';
 
 function TodoList() {
     const [title, setTitle] = useState('');
-    const [todoItems, setTodoItems] = useState([]);
+    const [todoItems, setTodoItems] = useStickyState([], 'catch-todoitems');
     const newTitleInput = useRef(null);
 
     const removeTodoItem = (id) => {
