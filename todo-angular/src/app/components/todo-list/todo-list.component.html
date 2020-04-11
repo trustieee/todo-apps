@@ -5,8 +5,8 @@
         <button class="list-inputs-button" (click)="addTodoItem()">+</button>
     </div>
     <div class="list-todoitems">
-        <div *ngIf="todoItems && todoItems.length > 0; else noItems">
-            <div *ngFor="let todoItem of todoItems">
+        <div *ngIf="todoListService.todoItems && todoListService.todoItems.length > 0; else noItems">
+            <div *ngFor="let todoItem of todoListService.todoItems">
                 <todo-item [item]="todoItem" (removed)="onRemoved($event)"></todo-item>
             </div>
         </div>

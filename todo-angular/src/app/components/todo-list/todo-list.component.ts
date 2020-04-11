@@ -9,29 +9,27 @@ import { TodoItem } from 'src/app/models/todo-item';
 })
 
 export class TodoListComponent implements OnInit {
-    todoItems: TodoItem[];
     newTodo: string = '';
     initialCount: number = 0;
     @ViewChild('newTodoInput') newTodoInput: ElementRef;
 
     constructor(
-        private todoListService: TodoListService
+        public todoListService: TodoListService
     ) { }
 
     ngOnInit() {
-        this.todoItems = this.todoListService.todoItems;
-        this.initialCount = this.todoItems.length;
+        this.initialCount = this.todoListService.todoItems.length;
     }
 
     addTodoItem() {
         if (this.newTodo?.length > 0) {
-            this.todoItems.push({ title: this.newTodo, id: ++this.initialCount })
+            this.todoListService.add({ title: this.newTodo, id: ++this.initialCount });
             this.newTodo = '';
-            this.newTodoInput.nativeElement.focus();
         }
+        this.newTodoInput.nativeElement.focus();
     }
 
     onRemoved(id: number) {
-        this.todoItems = this.todoItems.filter(t => t.id !== id);
+        this.todoListService.remove(id);
     }
 }
