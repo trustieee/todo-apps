@@ -10,7 +10,7 @@
     public TodoItemModel Item { get; set; }
 
     [Parameter]
-    public Action<Guid> Remove { get; set; }
+    public Func<Guid, Task> Remove { get; set; }
 
     private void InvokeRemove()
     {

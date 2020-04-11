@@ -1,5 +1,8 @@
 ﻿@inject IJSRuntime JSRuntime
 
+@using System.IO;
+@using System.Text;
+@using System.Text.Json;
 @using todo_blazor_wasm.Models
 
 <div class="list">
@@ -31,23 +34,34 @@
     private IList<TodoItemModel> _todoItems = new List<TodoItemModel>();
     private string _newTodo;
 
+    protected override async Task OnInitializedAsync()
+    {
+        var jsonTodoItems = await JSRuntime.InvokeAsync<string>("todoListJsInterop.get", new object[] { string.Empty, "catch-todoitems" });
+        if (!string.IsNullOrWhiteSpace(jsonTodoItems))
+        {
+            _todoItems = await JsonSerializer.DeserializeAsync<IList<TodoItemModel>>(new MemoryStream(Encoding.UTF8.GetBytes(jsonTodoItems)), new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+        }
+    }
+
     private async Task AddTodoItem()
     {
         if (!string.IsNullOrWhiteSpace(_newTodo))
         {
             _todoItems.Add(new TodoItemModel { Title = _newTodo });
+            await JSRuntime.InvokeVoidAsync("todoListJsInterop.set", "catch-todoitems", _todoItems);
             _newTodo = string.Empty;
             await JSRuntime.InvokeVoidAsync("todoListJsInterop.focus", _newTodoElement);
         }
     }
 
-    private void RemoveTodoItem(Guid id)
+    private async Task RemoveTodoItem(Guid id)
     {
         for (var i = 0; i < _todoItems.Count; i++)
         {
             if (_todoItems[i].Id == id)
             {
                 _todoItems.RemoveAt(i);
+                await JSRuntime.InvokeVoidAsync("todoListJsInterop.set", "catch-todoitems", _todoItems);
                 StateHasChanged();
                 break;
             }
