@@ -31,25 +31,40 @@ export default {
     TodoItem
   },
   props: {},
-  methods: {
-    addTodoItem: function() {
-      const tempTodo = this.newTodo && this.newTodo.trim();
-      this.todoItems.push({
-        title: tempTodo,
-        id: ++items
-      });
-      this.newTodo = "";
-      this.$refs.todoInput.focus();
-    },
-    removeClicked: function(id) {
-      this.todoItems = this.todoItems.filter(t => t.id != id);
-    }
-  },
   data: function() {
     return {
       todoItems: [],
       newTodo: ""
     };
+  },
+  mounted() {
+    const localStorageItems = localStorage.getItem("catch-todoitems");
+    this.todoItems = JSON.parse(localStorageItems) ?? [];
+  },
+  methods: {
+    addTodoItem: function() {
+      const tempTodo = this.newTodo && this.newTodo.trim();
+      if (tempTodo && tempTodo.length > 0) {
+        this.todoItems.push({
+          title: tempTodo,
+          id: ++items
+        });
+        this.saveToStorage();
+        this.newTodo = "";
+      }
+
+      this.$refs.todoInput.focus();
+    },
+    removeClicked: function(id) {
+      this.todoItems = this.todoItems.filter(t => t.id != id);
+      this.saveToStorage();
+    },
+    saveToStorage: function() {
+      const json = JSON.stringify(this.todoItems);
+      if (json) {
+        localStorage.setItem("catch-todoitems", json);
+      }
+    }
   }
 };
 </script>
